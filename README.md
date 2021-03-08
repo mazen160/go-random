@@ -15,6 +15,10 @@ go-random uses the standard Golang APIs to generate randomness (crypto/rand), wi
 - Cryptographically-secure (based on crypto/rand) Golang APIs
 - Concurrency-safe: You can run millions of go-routines and not have a token collision as the randomness seed is different for each call.
 
+# Use-cases for go-random?
+
+You can use go-random for secure-by-default password and token generation for your application.
+
 # Installation
 
 ```shell
@@ -174,7 +178,10 @@ import (
 
 func main() {
 	s := []string{"a", "b", "c", "d", "e", "f"}
-	data := random.Choice(s)
+	data, err := random.Choice(s)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	fmt.Println(data)
 }

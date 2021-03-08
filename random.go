@@ -35,8 +35,8 @@ func GetInt(max int) (int, error) {
 	return n, err
 }
 
-// GetMathInt generate a random integer using a seed of current system time.
-func GetMathInt(i int) int {
+// GetIntInsecure generate a random integer using a seed of current system time.
+func GetIntInsecure(i int) int {
 	var seededRand *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	return seededRand.Intn(i)
@@ -53,7 +53,7 @@ func StringInsecure(n int) (string, error) {
 	return Random(n, ASCIICharacters, false)
 }
 
-// StringRange generates a secure random string with the given range.
+// StringRange generates a secure random string within the given range.
 func StringRange(min int, max int) (string, error) {
 	i, err := IntRange(min, max)
 	if err != nil {
@@ -88,7 +88,7 @@ func Random(n int, charset string, isSecure bool) (string, error) {
 				return "", fmt.Errorf("error getting safe int with crypto/rand")
 			}
 		} else {
-			mrange = GetMathInt(len(charset))
+			mrange = GetIntInsecure(len(charset))
 		}
 
 		s[i] = charsetByte[mrange]
@@ -109,8 +109,19 @@ func Bytes(n int) ([]byte, error) {
 }
 
 // Choice makes a random choice from a slice of string.
-func Choice(j []string) string {
-	i := GetMathInt(len(j))
+func Choice(j []string) (string, error) {
+	i, err := GetInt(len(j))
+	if err != nil {
+		return "", err
+	}
+
+	return j[i], nil
+}
+
+// Choice makes a random choice from a slice of string.
+// Use only when the random choice does not require to be secure.
+func ChoiceInsecure(j []string) string {
+	i := GetIntInsecure(len(j))
 
 	return j[i]
 }
