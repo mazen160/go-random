@@ -24,7 +24,7 @@ func TestIntRange(t *testing.T) {
 }
 
 func TestGetInt(t *testing.T) {
-	for i := 0; i < 1000; i++ {
+	for i := 1; i < 1000; i++ {
 		_, err := GetInt(i * 1000)
 		if err != nil {
 			t.Error(err)

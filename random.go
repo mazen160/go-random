@@ -21,20 +21,16 @@ var (
 )
 
 // GetInt generates a cryptographically-secure random Int.
-// If fails, it returns the max int and an error.
-func GetInt(i int) (int, error) {
-	var n int
-	defer func() {
-		if err := recover(); err != nil {
-			n = i
-		}
-	}()
-	nbig, err := crypto_rand.Int(crypto_rand.Reader, big.NewInt(int64(i)))
-	n = int(nbig.Int64())
-
-	if n <= 0 {
-		return GetInt(i)
+// Provided max can't be <= 0.
+func GetInt(max int) (int, error) {
+	if max <= 0 {
+		return 0, fmt.Errorf("can't define input as <=0")
 	}
+	nbig, err := crypto_rand.Int(crypto_rand.Reader, big.NewInt(int64(max)))
+	if err != nil {
+		return max, err
+	}
+	n := int(nbig.Int64())
 
 	return n, err
 }
